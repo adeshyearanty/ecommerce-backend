@@ -112,3 +112,11 @@ export const checkUserExists = async (_body, _res, _next, _params, req) => {
     throw new NotFoundException("User not found.");
   }
 }
+
+export const validateForgotPassword = async (body, _res, _next, _params, req) => {
+  const { otp } = body
+  const verifyOTP = req.cookies.userOTP
+  if (otp !== verifyOTP) {
+    throw new UnauthorizedException("OTP is incorrect")
+  }
+}

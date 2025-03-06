@@ -39,7 +39,7 @@ export const UserService = {
       expiresIn: "7d",
     });
     res.cookie("userLoginToken", token, { maxAge: 900000, httpOnly: true });
-    return { message: "Login successful.", token, role: user.role };
+    return { message: "Login successful.", role: user.role };
   },
   async deregisterUser({ email, password }) {
     const user = await User.findOne({ email });
@@ -62,7 +62,7 @@ export const UserService = {
     }
     return user;
   },
-  async changePassword({ email, newPassword }) {
+  async changePassword({ email, newPassword }, _params, _req, _res) {
     const user = await User.findOne({ email });
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);

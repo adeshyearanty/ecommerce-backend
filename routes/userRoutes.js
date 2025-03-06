@@ -129,6 +129,43 @@
 
 /**
  * @swagger
+ * /users/forgotPassword:
+ *   post:
+ *     summary: Send password reset email
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: Email sent successfully
+ *       400:
+ *         description: Error sending email
+ */
+
+/**
+ * @swagger
+ * /users/changeForgotPassword:
+ *   post:
+ *     summary: Change password after reset
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               newPassword:
+ *                 type: string
+ *             required:
+ *               - newPassword
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *       400:
+ *         description: Validation error
+ */
+
+/**
+ * @swagger
  * components:
  *   schemas:
  *     RegisterUser:
@@ -160,6 +197,7 @@
  *           format: password
  */
 
+
 import express from "express";
 import {
   validateRegister,
@@ -167,38 +205,51 @@ import {
   validateDeregisterInput,
   authenticateUserForDeRegister,
   validateChangePassword,
+  validateForgotPassword,
 } from "../middlewares/userMiddleware.js";
-import { handleResponse, compileMiddlewares, sanitizeRequestBody } from "../utils/utils.js";
+import {
+  handleResponse,
+  compileMiddlewares,
+  sanitizeRequestBody,
+} from "../utils/utils.js";
 import { UserService } from "../services/userService.js";
 import registerSchema from "../dto/registerDto.js";
 import loginSchema from "../dto/loginDto.js";
+import { sendAMail } from "../utils/nodeMailer.js";
 
 const router = express.Router();
 
-router.get("/", handleResponse(UserService.getAllUsers));
-router.post(
-  "/register",
-  sanitizeRequestBody(registerSchema),
-  compileMiddlewares(validateRegister),
-  handleResponse(UserService.registerUser)
-);
-router.post(
-  "/login",
-  sanitizeRequestBody(loginSchema),
-  compileMiddlewares(validateLogin),
-  handleResponse(UserService.loginUser)
-);
-router.delete(
-  "/deregister",
-  compileMiddlewares(validateDeregisterInput, authenticateUserForDeRegister),
-  handleResponse(UserService.deregisterUser)
-);
-router.get("/user/:id", handleResponse(UserService.getUserDetails));
-router.post(
-  "/change-password",
-  compileMiddlewares(validateChangePassword),
-  handleResponse(UserService.changePassword)
-);
-router.get('/whoAmI', handleResponse(UserService.whoAmI));
+router
+  .get("/", handleResponse(UserService.getAllUsers))
+  .post(
+    "/register",
+    sanitizeRequestBody(registerSchema),
+    compileMiddlewares(validateRegister),
+    handleResponse(UserService.registerUser)
+  )
+  .post(
+    "/login",
+    sanitizeRequestBody(loginSchema),
+    compileMiddlewares(validateLogin),
+    handleResponse(UserService.loginUser)
+  )
+  .delete(
+    "/deregister",
+    compileMiddlewares(validateDeregisterInput, authenticateUserForDeRegister),
+    handleResponse(UserService.deregisterUser)
+  )
+  .get("/user/:id", handleResponse(UserService.getUserDetails))
+  .post(
+    "/changePassword",
+    compileMiddlewares(validateChangePassword),
+    handleResponse(UserService.changePassword)
+  )
+  .get("/whoAmI", handleResponse(UserService.whoAmI))
+  .post("/forgotPassword", handleResponse(sendAMail))
+  .post(
+    "/changeForgotPassword",
+    compileMiddlewares(validateForgotPassword),
+    handleResponse(UserService.changePassword)
+  );
 
 export default router;

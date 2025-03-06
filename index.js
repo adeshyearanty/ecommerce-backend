@@ -3,23 +3,30 @@ import { PORT } from "./config/config.js";
 import dbConn from "./db/db-conn.js";
 import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
-import cartRoutes from "./routes/cartRoutes.js"
+import cartRoutes from "./routes/cartRoutes.js";
 import { ErrorCodes } from "./utils/errorCodes.js";
 import { authMiddleware } from "./middlewares/authMiddleware.js";
 import cookieParser from "cookie-parser";
 import swaggerUi from "swagger-ui-express";
-import { specs } from './utils/swagger.js'
+import { specs } from "./utils/swagger.js";
 
 const app = express();
 app.use(cookieParser());
 app.use(express.json());
-app.use(authMiddleware(["users.login"]));
-app.get('/', (req, res) => {
-  res.send('Hello, Swagger!');
+app.use(
+  authMiddleware([
+    "users.login",
+    "users.forgotPassword",
+    "users.changeForgotPassword",
+    "api-docs.*",
+  ])
+);
+app.get("/", (req, res) => {
+  res.send("Hello, Swagger!");
 });
 app.use("/users", userRoutes);
 app.use("/products", productRoutes);
-app.use("/cart", cartRoutes)
+app.use("/cart", cartRoutes);
 app.use(
   "/api-docs",
   swaggerUi.serve,

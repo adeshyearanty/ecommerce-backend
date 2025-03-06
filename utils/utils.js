@@ -47,7 +47,7 @@ export function compileMiddlewares(...middlewares) {
 }
 
 export function sanitizeRequestBody(schema) {
-  return async function (req, res, next) {
+  return async function (req, _res, next) {
     const [, error] = await handlePromiseErrors(() =>
       schema.validateAsync(req.body)
     );

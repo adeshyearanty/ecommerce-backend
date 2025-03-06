@@ -2,27 +2,25 @@ import swaggerJsdoc from "swagger-jsdoc";
 
 const options = {
   definition: {
-    openapi: "3.0.0",  // Use "3.0.0" instead of "3.1.0"
+    openapi: "3.1.0",
     info: {
       title: "E-Commerce API",
       version: "1.0.0",
-      description: "E-Commerce API documented with Swagger",
-      license: {
-        name: "MIT",
-        url: "https://spdx.org/licenses/MIT.html",
-      },
-      contact: {
-        name: "Adesh",
-        email: "adesh.yearanty@gmail.com",
+      description: "API documentation for E-Commerce Backend",
+    },
+    servers: [{ url: "http://localhost:4000" }],
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
       },
     },
-    servers: [
-      {
-        url: "http://localhost:4000",
-      },
-    ],
+    security: [{ BearerAuth: [] }], // Global security (Optional)
   },
-  apis: ["./routes/*.js"],  // Ensure route files exist and have Swagger annotations
+  apis: ["./routes/*.js"], // Ensure all your route files are included
 };
 
 export const specs = swaggerJsdoc(options);
