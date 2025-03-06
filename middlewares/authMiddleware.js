@@ -7,7 +7,7 @@ export function authMiddleware(publicRoutes = []) {
     const url = req.url.replace("/", "").replace(/\//g, ".");
     if (publicRoutes.includes(url)) return next();
 
-    const token = req.headers?.authorization?.split(" ")[1] || null;
+    const token = req.cookies.userLoginToken;
     if (token) {
       jwt.verify(token, JWT_SECRET, (err, decoded) => {
         if (err) {

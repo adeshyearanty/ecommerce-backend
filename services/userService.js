@@ -72,7 +72,6 @@ export const UserService = {
 
     return { message: "Password changed successfully." };
   },
-
   async whoAmI(body, _params, req) {
     const userId = req.user.id;
     const user = await User.findOne({ _id: userId }).select("-password");
