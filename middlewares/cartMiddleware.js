@@ -1,4 +1,3 @@
-import Cart from '../models/CartModel.js'
 import Product from '../models/ProductModel.js'
 import { BadRequestException } from '../utils/errorCodes.js';
 

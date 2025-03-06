@@ -55,7 +55,7 @@ export const UserService = {
     await user.deleteOne();
     return { message: "User de-registered successfully." };
   },
-  async getUserDetails({}, { id }) {
+  async getUserDetails(_, { id }) {
     const user = await User.findOne({ _id: id });
     if (!user) {
       throw new NotFoundException("User not found.");

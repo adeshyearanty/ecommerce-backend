@@ -2,7 +2,7 @@ import Joi from "joi"
 
 const loginSchema = Joi.object({
     password: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+        .pattern(/^[a-zA-Z0-9]{3,30}$/)
         .required(),
 
     email: Joi.string()
@@ -11,9 +11,3 @@ const loginSchema = Joi.object({
 })
 
 export default loginSchema;
-
-
-// try {
-//     const value = await schema.validateAsync({ username: 'abc', birth_year: 1994 });
-// }
-// catch (err) { }

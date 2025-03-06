@@ -1,7 +1,5 @@
 import Product from "../models/ProductModel.js";
 import {
-  BadRequestException,
-  UnauthorizedException,
   NotFoundException,
 } from "../utils/errorCodes.js";
 

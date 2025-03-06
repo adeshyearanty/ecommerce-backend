@@ -2,7 +2,6 @@ import Product from "../models/ProductModel.js";
 import {
   BadRequestException,
   NotFoundException,
-  UnauthorizedException,
 } from "../utils/errorCodes.js";
 
 export const validateProductInput = (body, _, _next) => {

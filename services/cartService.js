@@ -33,7 +33,7 @@ const CartService = {
       if (existingProduct.quantity <= 0) //if aggregated quantity is <= 0 then remove the product from the cart
         return CartService.removeProductFromCart(productId, cart);
     } else {
-      //else push the product along with the quantity
+      //else push the product along with quantity
       if (quantity < 0) { //input quantity cannot be negative
         throw new BadRequestException("Quantity cannot by negative");
       }

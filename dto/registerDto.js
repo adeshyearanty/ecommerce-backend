@@ -8,7 +8,7 @@ const registerSchema = Joi.object({
         .required(),
 
     password: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+        .pattern(/^[a-zA-Z0-9]{3,30}$/)
         .required(),
 
     email: Joi.string()
@@ -17,9 +17,3 @@ const registerSchema = Joi.object({
 })
 
 export default registerSchema;
-
-
-// try {
-//     const value = await schema.validateAsync({ username: 'abc', birth_year: 1994 });
-// }
-// catch (err) { }
