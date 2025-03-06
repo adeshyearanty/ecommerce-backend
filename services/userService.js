@@ -24,7 +24,7 @@ export const UserService = {
 
     return user.id;
   },
-  async loginUser({ email, password }) {
+  async loginUser({ email, password }, _params, _req, res) {
     const user = await User.findOne({ email });
     if (!user) {
       throw new NotFoundException("User not found.");
@@ -38,7 +38,7 @@ export const UserService = {
     const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, {
       expiresIn: "7d",
     });
-
+    res.cookie("userLoginToken", token, { maxAge: 900000, httpOnly: true });
     return { message: "Login successful.", token, role: user.role };
   },
   async deregisterUser({ email, password }) {

@@ -104,3 +104,11 @@ export const validateChangePassword = async (body) => {
     throw new BadRequestException("Passwords do not match.");
   }
 };
+
+export const checkUserExists = async (_body, _res, _next, _params, req) => {
+  const userId = req.user.id;
+  const user = await User.findOne({ _id: userId });
+  if (!user) {
+    throw new NotFoundException("User not found.");
+  }
+}

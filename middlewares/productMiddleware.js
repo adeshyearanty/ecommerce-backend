@@ -12,8 +12,8 @@ export const validateProductInput = (body, _, _next) => {
   }
 };
 
-export const checkProductExists = async (_body, _res, _next, params) => {
-  const { id } = params;
-  const product = await Product.findOne({ _id: id });
+export const checkProductExists = async (body, _res, _next, params) => {
+  const productId = params.productId || body.productId;
+  const product = await Product.findOne({ _id: productId });
   if (!product) throw new NotFoundException("Product not found.");
 };

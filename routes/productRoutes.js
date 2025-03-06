@@ -11,29 +11,30 @@ import { userRoleMiddleware } from "../middlewares/userRoleMiddleware.js";
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });
 
-router.get("/", handleResponse(ProductService.getAllProducts));
-router.post(
-  "/",
-  userRoleMiddleware("admin"),
-  compileMiddlewares(validateProductInput),
-  handleResponse(ProductService.createProduct)
-);
-router.get(
-  "/:id",
-  compileMiddlewares(checkProductExists),
-  handleResponse(ProductService.getSingleProduct)
-);
-router.put(
-  "/:id",
-  userRoleMiddleware("admin"),
-  compileMiddlewares(checkProductExists),
-  handleResponse(ProductService.updateProduct)
-);
-router.delete(
-  "/:id",
-  userRoleMiddleware("admin"),
-  compileMiddlewares(checkProductExists),
-  handleResponse(ProductService.deleteProduct)
-);
+router
+  .get("/", handleResponse(ProductService.getAllProducts))
+  .post(
+    "/",
+    userRoleMiddleware("admin"),
+    compileMiddlewares(validateProductInput),
+    handleResponse(ProductService.createProduct)
+  )
+  .get(
+    "/:productId",
+    compileMiddlewares(checkProductExists),
+    handleResponse(ProductService.getSingleProduct)
+  )
+  .put(
+    "/:productId",
+    userRoleMiddleware("admin"),
+    compileMiddlewares(checkProductExists),
+    handleResponse(ProductService.updateProduct)
+  )
+  .delete(
+    "/:productId",
+    userRoleMiddleware("admin"),
+    compileMiddlewares(checkProductExists),
+    handleResponse(ProductService.deleteProduct)
+  );
 
 export default router;

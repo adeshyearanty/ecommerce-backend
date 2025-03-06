@@ -1,3 +1,5 @@
+import { BadRequestException } from "./errorCodes.js";
+
 export async function handlePromiseErrors(promise) {
   try {
     const data = await promise();
@@ -23,7 +25,7 @@ export async function prepareResponse(promise) {
 export function handleResponse(asyncFunction) {
   return async (req, res, next) => {
     const { data, error, success } = await prepareResponse(() =>
-      asyncFunction(req.body, req.params, req)
+      asyncFunction(req.body, req.params, req, res)
     );
 
     if (error) return next(error);
@@ -36,10 +38,20 @@ export function compileMiddlewares(...middlewares) {
   return async (req, res, next) => {
     for (const middleware of middlewares) {
       const [, error] = await handlePromiseErrors(() =>
-        middleware(req.body, res, next, req.params)
+        middleware(req.body, res, next, req.params, req)
       );
       if (error) return next(error);
     }
     next();
+  };
+}
+
+export function sanitizeRequestBody(schema) {
+  return async function (req, res, next) {
+    const [, error] = await handlePromiseErrors(() =>
+      schema.validateAsync(req.body)
+    );
+    if (error) next(new BadRequestException(error.message));
+    else next();
   };
 }
