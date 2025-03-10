@@ -5,14 +5,12 @@ import jwt from "jsonwebtoken";
 export function authMiddleware(publicRoutes = []) {
   return async function (req, _res, next) {
     let url = req.url;
-
     // Ensure api-docs routes are properly handled without unwanted replacements
     if (!url.startsWith("/api-docs")) {
       url = url.replace("/", "").replace(/\//g, ".");
     } else {
       url = url.substring(1); // Remove the leading slash
     }
-
     // Check if the route is in publicRoutes or matches a wildcard route
     if (
       publicRoutes.some(
@@ -23,7 +21,6 @@ export function authMiddleware(publicRoutes = []) {
     ) {
       return next();
     }
-
     const token = req.cookies.userLoginToken;
     if (token) {
       jwt.verify(token, JWT_SECRET, (err, decoded) => {

@@ -48,6 +48,11 @@ const CartService = {
     await cart.save();
     return cart;
   },
+  async showCart(_body, _, req) {
+    const userId = req.user.id
+    let cart = await Cart.findOne({ userId })
+    return cart
+  }
 };
 
 export default CartService;

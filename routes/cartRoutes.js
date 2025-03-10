@@ -57,7 +57,11 @@
  */
 
 import express from "express";
-import { compileMiddlewares, handleResponse, sanitizeRequestBody } from "../utils/utils.js";
+import {
+  compileMiddlewares,
+  handleResponse,
+  sanitizeRequestBody,
+} from "../utils/utils.js";
 import { checkUserExists } from "../middlewares/userMiddleware.js";
 import { checkProductExists } from "../middlewares/productMiddleware.js";
 import cartService from "../services/cartService.js";
@@ -65,11 +69,17 @@ import { checkProductQuantity } from "../middlewares/cartMiddleware.js";
 import CartSchema from "../dto/cartDto.js";
 const router = express.Router();
 
-router.post(
-  "/",
-  sanitizeRequestBody(CartSchema),
-  compileMiddlewares(checkUserExists, checkProductExists, checkProductQuantity),
-  handleResponse(cartService.createCart)
-);
+router
+  .post(
+    "/",
+    sanitizeRequestBody(CartSchema),
+    compileMiddlewares(
+      checkUserExists,
+      checkProductExists,
+      checkProductQuantity
+    ),
+    handleResponse(cartService.createCart)
+  )
+  .get("/", handleResponse(cartService.showCart));
 
 export default router;
