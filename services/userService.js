@@ -20,7 +20,7 @@ export const UserService = {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = await User.create({ name, email, password: hashedPassword });
+    const user = await User.create({ name, email, password: hashedPassword, addresses: [] });
 
     return user.id;
   },
@@ -72,9 +72,16 @@ export const UserService = {
 
     return { message: "Password changed successfully." };
   },
-  async whoAmI(body, _params, req) {
+  async whoAmI(_body, _params, req) {
     const userId = req.user.id;
     const user = await User.findOne({ _id: userId }).select("-password");
+    return user;
+  },
+  async addAddress({ address }, _params, req) {
+    const userId = req.user.id;
+    const user = await User.findOne({ _id: userId });
+    user.addresses.push(address);
+    await user.save();
     return user;
   },
 };

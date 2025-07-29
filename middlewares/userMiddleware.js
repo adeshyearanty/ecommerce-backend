@@ -92,7 +92,9 @@ export const validateChangePassword = async (body) => {
   }
 
   if (newPassword === oldPassword) {
-    throw new BadRequestException("New password cannot be the same as old password.");
+    throw new BadRequestException(
+      "New password cannot be the same as old password."
+    );
   }
 
   const isMatch = await bcryptjs.compare(oldPassword, user.password);
@@ -111,12 +113,18 @@ export const checkUserExists = async (_body, _res, _next, _params, req) => {
   if (!user) {
     throw new NotFoundException("User not found.");
   }
-}
+};
 
-export const validateForgotPassword = async (body, _res, _next, _params, req) => {
-  const { otp } = body
-  const verifyOTP = req.cookies.userOTP
+export const validateForgotPassword = async (
+  body,
+  _res,
+  _next,
+  _params,
+  req
+) => {
+  const { otp } = body;
+  const verifyOTP = req.cookies.userOTP;
   if (otp !== verifyOTP) {
-    throw new UnauthorizedException("OTP is incorrect")
+    throw new UnauthorizedException("OTP is incorrect");
   }
-}
+};

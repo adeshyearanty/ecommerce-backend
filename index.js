@@ -5,6 +5,7 @@ import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import wishlistRoutes from "./routes/wishlistRoutes.js";
+import checkoutRoutes from "./routes/checkoutRoutes.js";
 import { ErrorCodes } from "./utils/errorCodes.js";
 import { authMiddleware } from "./middlewares/authMiddleware.js";
 import cookieParser from "cookie-parser";
@@ -28,7 +29,8 @@ app.get("/", (req, res) => {
 app.use("/users", userRoutes);
 app.use("/products", productRoutes);
 app.use("/cart", cartRoutes);
-app.use("/wishlist", wishlistRoutes)
+app.use("/wishlist", wishlistRoutes);
+app.use("/checkout", checkoutRoutes);
 app.use(
   "/api-docs",
   swaggerUi.serve,

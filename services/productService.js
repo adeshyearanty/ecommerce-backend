@@ -1,7 +1,4 @@
 import Product from "../models/ProductModel.js";
-import {
-  NotFoundException,
-} from "../utils/errorCodes.js";
 
 const ProductService = {
   async getAllProducts() {

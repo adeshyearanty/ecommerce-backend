@@ -1,10 +1,8 @@
-import Joi from 'joi'
+import Joi from "joi";
 
 const CartSchema = Joi.object({
-    productId: Joi.string()
-        .required(),
-    quantity: Joi.number()
-        .required()
-})
+  productId: Joi.string().required(),
+  quantity: Joi.number().required(),
+});
 
-export default CartSchema
+export default CartSchema;

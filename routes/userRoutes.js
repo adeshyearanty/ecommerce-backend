@@ -52,6 +52,8 @@
  *         description: Login successful, returns a token
  *       400:
  *         description: Invalid credentials
+ *       404:
+ *         description: User Not Found
  */
 
 /**
@@ -112,6 +114,8 @@
  *         description: Password changed successfully
  *       400:
  *         description: Validation error
+ *       404:
+ *         description: User Not Found
  */
 
 /**
@@ -125,6 +129,8 @@
  *         description: Returns the logged-in user's details
  *       401:
  *         description: Unauthorized
+ *       404:
+ *         description: User Not Found  
  */
 
 /**
@@ -138,6 +144,8 @@
  *         description: Email sent successfully
  *       400:
  *         description: Error sending email
+ *       404:
+ *         description: User Not Found
  */
 
 /**
@@ -162,6 +170,30 @@
  *         description: Password changed successfully
  *       400:
  *         description: Validation error
+ *       404:
+ *         description: User Not Found
+ */
+
+/**
+ * @swagger
+ * /users/addAddress:
+ *   post:
+ *     summary: Add an address for the user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/userAddressDto"
+ *     responses:
+ *       200:
+ *         description: Address added successfully
+ *       400:
+ *         description: Validation error
+ *       404:
+ *         description: User Not Found
+ *
  */
 
 /**
@@ -195,8 +227,31 @@
  *         password:
  *           type: string
  *           format: password
+ *     UserAddress:
+ *       type: object
+ *       required:
+ *         - addressLine1
+ *         - city
+ *         - state
+ *         - pinCode
+ *         - country
+ *         - mobileNumber
+ *       properties:
+ *         addressLine1:
+ *           type: string
+ *         addressLine2:
+ *           type: string
+ *         city:
+ *           type: string
+ *         state:
+ *           type: string
+ *         pinCode:
+ *           type: number
+ *         country:
+ *           type: string
+ *         mobileNumber:
+ *           type: number
  */
-
 
 import express from "express";
 import {
@@ -206,6 +261,7 @@ import {
   authenticateUserForDeRegister,
   validateChangePassword,
   validateForgotPassword,
+  checkUserExists,
 } from "../middlewares/userMiddleware.js";
 import {
   handleResponse,
@@ -215,6 +271,7 @@ import {
 import { UserService } from "../services/userService.js";
 import registerSchema from "../dto/registerDto.js";
 import loginSchema from "../dto/loginDto.js";
+import userAddressSchema from "../dto/userAddressDto.js";
 import { sendAMail } from "../utils/nodeMailer.js";
 
 const router = express.Router();
@@ -241,15 +298,25 @@ router
   .get("/user/:id", handleResponse(UserService.getUserDetails))
   .post(
     "/changePassword",
-    compileMiddlewares(validateChangePassword),
+    compileMiddlewares(checkUserExists, validateChangePassword),
     handleResponse(UserService.changePassword)
   )
-  .get("/whoAmI", handleResponse(UserService.whoAmI))
+  .get(
+    "/whoAmI",
+    compileMiddlewares(checkUserExists),
+    handleResponse(UserService.whoAmI)
+  )
   .post("/forgotPassword", handleResponse(sendAMail))
   .post(
     "/changeForgotPassword",
-    compileMiddlewares(validateForgotPassword),
+    compileMiddlewares(checkUserExists, validateForgotPassword),
     handleResponse(UserService.changePassword)
+  )
+  .post(
+    "/addAddress",
+    sanitizeRequestBody(userAddressSchema),
+    compileMiddlewares(checkUserExists),
+    handleResponse(UserService.addAddress)
   );
 
 export default router;

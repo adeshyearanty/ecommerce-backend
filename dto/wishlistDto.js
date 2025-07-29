@@ -1,8 +1,7 @@
-import Joi from 'joi'
+import Joi from "joi";
 
 const WishlistSchema = Joi.object({
-    productId: Joi.string()
-        .required()
-})
+  productId: Joi.string().required(),
+});
 
-export default WishlistSchema
+export default WishlistSchema;
